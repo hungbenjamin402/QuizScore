@@ -11,7 +11,7 @@ import SwiftUI
 struct QuizScoreApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(question: Question.allQuestions[3])
         }
     }
 }

@@ -14,6 +14,7 @@
 		E6BD76FB2B967249000ED2E5 /* QuizScoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6BD76FA2B967249000ED2E5 /* QuizScoreTests.swift */; };
 		E6BD77052B967249000ED2E5 /* QuizScoreUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6BD77042B967249000ED2E5 /* QuizScoreUITests.swift */; };
 		E6BD77072B967249000ED2E5 /* QuizScoreUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6BD77062B967249000ED2E5 /* QuizScoreUITestsLaunchTests.swift */; };
+		E6BD77142B96CAEC000ED2E5 /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6BD77132B96CAEC000ED2E5 /* Question.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +45,7 @@
 		E6BD77002B967249000ED2E5 /* QuizScoreUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = QuizScoreUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6BD77042B967249000ED2E5 /* QuizScoreUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizScoreUITests.swift; sourceTree = "<group>"; };
 		E6BD77062B967249000ED2E5 /* QuizScoreUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizScoreUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		E6BD77132B96CAEC000ED2E5 /* Question.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Question.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +97,7 @@
 			isa = PBXGroup;
 			children = (
 				E6BD76E92B967246000ED2E5 /* QuizScoreApp.swift */,
+				E6BD77132B96CAEC000ED2E5 /* Question.swift */,
 				E6BD76EB2B967246000ED2E5 /* ContentView.swift */,
 				E6BD76ED2B967248000ED2E5 /* Assets.xcassets */,
 				E6BD76EF2B967248000ED2E5 /* Preview Content */,
@@ -257,6 +260,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E6BD77142B96CAEC000ED2E5 /* Question.swift in Sources */,
 				E6BD76EC2B967246000ED2E5 /* ContentView.swift in Sources */,
 				E6BD76EA2B967246000ED2E5 /* QuizScoreApp.swift in Sources */,
 			);

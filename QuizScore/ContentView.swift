@@ -1,64 +1,158 @@
-//
-//  ContentView.swift
-//  QuizScore
-//
-//  Created by benjamin on 3/4/24.
-//
-
 import SwiftUI
 
 struct ContentView: View {
-    let questionAnswer = [
-        ["All spiders have eight eyes","False"],
-        ["A group of crows is called a murder", "True"],
-        ["Sharks can blink with both eyes", "False"],
-        ["Dolphins sleep with one eye open", "True"],
-        ["Ostriches can run faster than horses", "True"],
-        ["Bats are mammals", "True"],
-    ]
+    @State private var question: Question
+    @State private var selectedAnswer: String? = nil
+    @State private var score = 0
+    @State private var timeRemaining = 30
+    @State private var timer: Timer?
+    
+    init(question: Question) {
+        self._question = State(initialValue: question)
+    }
     
     var body: some View {
         ZStack {
-            Color(.white)
+            Color(hex: 0x313b5c)
                 .ignoresSafeArea()
-            VStack{
-                Text("Quiz Time")
-                    .font(.largeTitle)
-                    .foregroundColor(.red)
-                    .padding()
-                
-                ForEach(0..<2) { index in
-                    Text("Question \(index)/" + String(questionAnswer.count))
-                        .padding()
-                    Spacer()
-                    Text(questionAnswer[index][0])
-                    Spacer()
+            VStack {
+                HStack (spacing: 130, content: {
+                    Text("Quiz Time")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                        
                     
-                    HStack {
-                        AnswerButton(text: "\(questionAnswer[0][1])")
-                    }
-                }
+                    Text("Score: \(score)")
+                        .foregroundStyle(.white)
+                })
                 
+                Spacer()
+                
+                
+                Text(question.question)
+                    .fontWeight(.bold)
+                    .font(.system(size: 24))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .foregroundColor(.white)
+                    .padding()
+
+                Spacer()
+                
+                Text("Time: \(timeRemaining)s")
+                    .onAppear(perform: startTimer)
+                    .foregroundColor(.white)
+                
+                HStack {
+                    AnswerButton(answer: "True", isSelected: $selectedAnswer, correctAnswer: question.correctAnswer) {
+                        processAnswer("True")
+                    }
+                    .background(selectedAnswer == "True" ? colorForButton(correctAnswer: "True") : Color.white)
+                    .cornerRadius(10)
+                    
+                    AnswerButton(answer: "False", isSelected: $selectedAnswer, correctAnswer: question.correctAnswer) {
+                        processAnswer("False")
+                    }
+                    .background(selectedAnswer == "False" ? colorForButton(correctAnswer: "False") : Color.white)
+                    .cornerRadius(10)
+                }
                 
             }
         }
+    }
+    
+    func processAnswer(_ answer: String) {
+        selectedAnswer = answer
+        stopTimer()
         
-        
+        if answer == question.correctAnswer {
+            score += 1
+            goToNextQuestion()
+        } else {
+            generateNewQuestion()
+        }
+    }
+    
+    func goToNextQuestion() {
+        if let currentIndex = Question.allQuestions.firstIndex(where: { $0.question == question.question }),
+           currentIndex + 1 < Question.allQuestions.count {
+            question = Question.allQuestions[currentIndex + 1]
+        } else {
+            // Reset to first question or show completion if at the end of the array
+            question = Question.allQuestions.first!
+        }
+        resetForNextQuestion()
+    }
+    
+    func generateNewQuestion() {
+        question = Question.allQuestions.randomElement()!
+        resetForNextQuestion()
+    }
+    
+    func resetForNextQuestion() {
+        selectedAnswer = nil
+        startTimer()
+    }
+    
+    func startTimer() {
+        timeRemaining = 30
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+            if self.timeRemaining > 0 {
+                self.timeRemaining -= 1
+            } else {
+                self.stopTimer()
+                // Automatically go to next question or generate new question when time expires
+                self.generateNewQuestion()
+            }
+        }
+    }
+    
+    func stopTimer() {
+        timer?.invalidate()
+        timer = nil
+    }
+    
+    func colorForButton(correctAnswer: String) -> Color {
+        if let selected = selectedAnswer, selected == question.correctAnswer {
+            return .green
+        } else if let selected = selectedAnswer, selected != question.correctAnswer {
+            return .red
+        } else {
+            return .blue
+        }
     }
 }
 
 struct AnswerButton: View {
-    let text: String
+    let answer: String
+    @Binding var isSelected: String?
+    let correctAnswer: String
+    let onClick: () -> Void
+    
     var body: some View {
         Button(action: {
-            print("You selected " + text)
-        }) {
-            Text(text)
-        }
-        .padding()
-        .border(Color.red, width: 10)
+            onClick()
+        }, label: {
+            Text(answer)
+                .foregroundColor(.black)
+                .padding()
+        })
+        .border(Color.red, width: 8)
     }
 }
+
+extension Color {
+    init(hex: UInt, alpha: Double = 1) {
+        self.init(
+            .sRGB,
+            red: Double((hex >> 16) & 0xff) / 255,
+            green: Double((hex >> 08) & 0xff) / 255,
+            blue: Double((hex >> 00) & 0xff) / 255,
+            opacity: alpha
+        )
+    }
+}
+
 #Preview {
-    ContentView()
+    ContentView(question: Question.allQuestions[0])
 }
